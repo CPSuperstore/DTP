@@ -12,6 +12,31 @@
 #endif //DTP_CONVERSION_H
 
 #define NULL_CHAR 'j'
+#define DATA_ENCAPSULATOR '|'
+#define DATA_ENCAPSULATOR_STR "|"
+
+char *extract_data(const char *str) {
+    const char *i1 = strstr(str, DATA_ENCAPSULATOR_STR);
+    if (i1 != NULL) {
+        const size_t pl1 = strlen(DATA_ENCAPSULATOR_STR);
+        const char *i2 = strstr(i1 + pl1, DATA_ENCAPSULATOR_STR);
+
+        const size_t mlen = i2 - (i1 + pl1);
+        char *ret = malloc(mlen + 1);
+        if (ret != NULL) {
+            memcpy(ret, i1 + pl1, mlen);
+            ret[mlen] = '\0';
+            return ret;
+        }
+    }
+    return NULL;
+}
+
+char *encapsulate_data(char *str){
+    char *result = malloc(strlen(str + 2));
+    sprintf(result, "%c%s%c", DATA_ENCAPSULATOR, str, DATA_ENCAPSULATOR);
+    return result;
+}
 
 int bin_to_dec(const int bin[8]){
     int multiplier = 1;
@@ -84,7 +109,7 @@ int * char_to_nybble(char c){
         case '-':
             result = (int [4]) {1, 1, 0, 1};
             break;
-        case '|':
+        case DATA_ENCAPSULATOR:
             result = (int [4]) {1, 1, 1, 0};
             break;
         default:
@@ -147,7 +172,7 @@ char nybble_to_char(const int * c){
         result = '-';
     }
     else if (compareArrays(c, (int[4]){1, 1, 1, 0}, 4)){
-        result = '|';
+        result = DATA_ENCAPSULATOR;
     }
     else {
         result = NULL_CHAR;
@@ -182,6 +207,7 @@ int *twos_compliment(int data){
 }
 
 char* encode_message(char* input){
+    input = encapsulate_data(input);
     int adder;
     int i;
     int *buff = (int[8]) {1, 1, 1, 1, 1, 1, 1, 1};
@@ -237,5 +263,5 @@ char* decode_message(char* input){
         message[strlen(message) - 1] = '\0';
     }
 
-    return message;
+    return extract_data(message);
 }
