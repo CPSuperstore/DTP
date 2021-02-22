@@ -50,3 +50,7 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# other things I dont want in the repo
+.idea/
+cmake-build-debug/
