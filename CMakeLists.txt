@@ -3,4 +3,4 @@ project(DTP C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(DTP main.c conversion.h conversion.h)
+add_executable(DTP main.c conversion.h conversion.h transmitter.h system_data.h)

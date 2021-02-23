@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include "system_data.h"
 
 #ifndef DTP_CONVERSION_H
 #define DTP_CONVERSION_H
@@ -32,9 +33,11 @@ char *extract_data(const char *str) {
     return NULL;
 }
 
-char *encapsulate_data(char *str){
+char *encapsulate_data(char *str, char message_type){
     char *result = malloc(strlen(str + 2));
-    sprintf(result, "%c%s%c", DATA_ENCAPSULATOR, str, DATA_ENCAPSULATOR);
+
+    sprintf(result, "%c%c%c%d%c%s%c", DATA_ENCAPSULATOR, message_type, DATA_ENCAPSULATOR, get_device_id(), DATA_ENCAPSULATOR, str, DATA_ENCAPSULATOR);
+    printf("%s\n", result);
     return result;
 }
 
@@ -207,7 +210,7 @@ int *twos_compliment(int data){
 }
 
 char* encode_message(char* input){
-    input = encapsulate_data(input);
+    input = encapsulate_data(input, '1');
     int adder;
     int i;
     int *buff = (int[8]) {1, 1, 1, 1, 1, 1, 1, 1};
